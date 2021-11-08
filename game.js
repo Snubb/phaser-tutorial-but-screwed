@@ -21,6 +21,8 @@ var score = 0;
 var scoreText;
 var game = new Phaser.Game(config);
 var coolDown = 60;
+var collider;
+let starAmmo = 0;
 
 function preload () {
     this.load.image('sky', 'assets/sky.png');
@@ -35,13 +37,14 @@ function preload () {
 }
 
 function create() {
-    
+
     var bombScale = 0;
     var starSpawn = true;
     this.keyObj = this.input.keyboard.addKey('R');  // Get key object
     this.keyObjT = this.input.keyboard.addKey('T');  // Get key object
     this.keyObjO = this.input.keyboard.addKey('O');
     this.keyObjI = this.input.keyboard.addKey('I');
+    this.keyObjE = this.input.keyboard.addKey('E');
     //console.log(keyObj);
 
     this.add.image(400, 300, 'engie');
@@ -90,6 +93,10 @@ stars = this.physics.add.group({
     setXY: { x: 12, y: 0, stepX: 70 }
 });
 
+ammo = this.physics.add.group ({
+
+});
+
 stars.children.iterate(function (child) {
 
     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
@@ -104,7 +111,10 @@ this.physics.add.collider(player, bombs, hitBomb, null, this);
 
 scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
-this.physics.add.collider(stars, platforms);
+//this.physics.add.collider(stars, platforms);
+
+collider = this.physics.add.collider(stars, platforms);
+collider.active = true;
 
 this.physics.add.collider(bombs, bombs);
 
@@ -114,6 +124,7 @@ var bomb;
 
 function collectStar (player, star)
 {
+    starAmmo++;
     star.disableBody(true, true);
 
     score += 10;
@@ -161,6 +172,13 @@ function update() {
     var isDown = this.keyObj.isDown;
     //var isUp = keyObj.isUp;
     
+    if(this.keyObjE.isDown && starAmmo > 0) {
+        starAmmo--;
+        shot = ammo.create(player.x, player.y, 'star');
+        shot.setVelocity(400, 0);
+        shot.body.setAllowGravity(false);
+    }
+
     if(isDown) {
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
@@ -170,29 +188,19 @@ function update() {
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
     }
     if(this.keyObjI.isDown) {
-        stars.children.iterate(function (child) {
+        collider.active = false;
 
-            
+        stars.children.iterate(function (child) {
             child.setVelocityX((child.x - player.x) *-1);
             child.setVelocityY((child.y - player.y) *-1);
-
-           /* if(child.x > player.x) {
-                child.setVelocityX(-200);
-            } else {
-                child.setVelocityX(200);
-            }
-            if(child.y > player.y) {
-                child.setVelocityY(-200);
-            } else {
-                child.setVelocityY(200);
-            }*/
         
         });
-    } /*else {
-        stars.children.iterate(function (child){
+    } else {
+        collider.active = true;
+        stars.children.iterate(function (child) {
             child.setVelocityX(0);
         });
-    }*/
+    }
     if(this.keyObjT.isDown) {
         
         var n = bombs.countActive(true);
