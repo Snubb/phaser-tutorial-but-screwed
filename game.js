@@ -173,7 +173,10 @@ function update() {
         stars.children.iterate(function (child) {
 
             
-            if(child.x > player.x) {
+            child.setVelocityX((child.x - player.x) *-1);
+            child.setVelocityY((child.y - player.y) *-1);
+
+           /* if(child.x > player.x) {
                 child.setVelocityX(-200);
             } else {
                 child.setVelocityX(200);
@@ -182,14 +185,14 @@ function update() {
                 child.setVelocityY(-200);
             } else {
                 child.setVelocityY(200);
-            }
+            }*/
         
         });
-    } else {
+    } /*else {
         stars.children.iterate(function (child){
             child.setVelocityX(0);
         });
-    }
+    }*/
     if(this.keyObjT.isDown) {
         
         var n = bombs.countActive(true);
