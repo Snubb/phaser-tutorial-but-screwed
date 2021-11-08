@@ -2,6 +2,7 @@ var config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
+    pixelArt: true,
     physics: {
         default: 'arcade',
         arcade: {
@@ -40,6 +41,7 @@ function create() {
     this.keyObj = this.input.keyboard.addKey('R');  // Get key object
     this.keyObjT = this.input.keyboard.addKey('T');  // Get key object
     this.keyObjO = this.input.keyboard.addKey('O');
+    this.keyObjI = this.input.keyboard.addKey('I');
     //console.log(keyObj);
 
     this.add.image(400, 300, 'engie');
@@ -84,7 +86,7 @@ cursors = this.input.keyboard.createCursorKeys();
 
 stars = this.physics.add.group({
     key: 'star',
-    repeat: 11,
+    //repeat: 11,
     setXY: { x: 12, y: 0, stepX: 70 }
 });
 
@@ -132,7 +134,8 @@ function collectStar (player, star)
             bomb.setScale(bombScale);
             bomb.setBounce(1);
             bomb.setCollideWorldBounds(true);
-            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            bomb.setVelocity(200, 90);
+            bomb.body.setAllowGravity(false);
         }
 
         bomb.setScale(bombScale);
@@ -165,6 +168,27 @@ function update() {
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    }
+    if(this.keyObjI.isDown) {
+        stars.children.iterate(function (child) {
+
+            
+            if(child.x > player.x) {
+                child.setVelocityX(-200);
+            } else {
+                child.setVelocityX(200);
+            }
+            if(child.y > player.y) {
+                child.setVelocityY(-200);
+            } else {
+                child.setVelocityY(200);
+            }
+        
+        });
+    } else {
+        stars.children.iterate(function (child){
+            child.setVelocityX(0);
+        });
     }
     if(this.keyObjT.isDown) {
         
