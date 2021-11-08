@@ -86,7 +86,7 @@ cursors = this.input.keyboard.createCursorKeys();
 
 stars = this.physics.add.group({
     key: 'star',
-    //repeat: 11,
+    repeat: 11,
     setXY: { x: 12, y: 0, stepX: 70 }
 });
 
@@ -160,7 +160,7 @@ function update() {
     
     var isDown = this.keyObj.isDown;
     //var isUp = keyObj.isUp;
-    console.log(this.keyObjT.isDown);
+    
     if(isDown) {
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
@@ -193,7 +193,6 @@ function update() {
     if(this.keyObjT.isDown) {
         
         var n = bombs.countActive(true);
-        console.log(n);
         for (let i = 0; i < n; i++) {
             var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
